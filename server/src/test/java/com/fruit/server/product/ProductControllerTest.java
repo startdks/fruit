@@ -46,6 +46,7 @@ class ProductControllerTest {
                 "https://example.com/apple.jpg",
                 "lb",
                 100,
+                "USA",
                 true);
     }
 
@@ -155,7 +156,7 @@ class ProductControllerTest {
                     "", // empty name
                     "Description",
                     new BigDecimal("2.99"),
-                    null, null, null, null);
+                    null, null, null, null, null);
 
             mockMvc.perform(post("/api/products")
                     .contentType(MediaType.APPLICATION_JSON)
@@ -170,7 +171,7 @@ class ProductControllerTest {
                     "Apple",
                     "Description",
                     null, // no price
-                    null, null, null, null);
+                    null, null, null, null, null);
 
             mockMvc.perform(post("/api/products")
                     .contentType(MediaType.APPLICATION_JSON)
@@ -185,7 +186,7 @@ class ProductControllerTest {
                     "Apple",
                     "Description",
                     new BigDecimal("-1.00"), // negative price
-                    null, null, null, null);
+                    null, null, null, null, null);
 
             mockMvc.perform(post("/api/products")
                     .contentType(MediaType.APPLICATION_JSON)
@@ -208,7 +209,7 @@ class ProductControllerTest {
                     "New Name",
                     "Updated description",
                     new BigDecimal("5.99"),
-                    null, "kg", 200, true);
+                    null, "kg", 200, "Canada", true);
 
             mockMvc.perform(put("/api/products/{id}", product.getId())
                     .contentType(MediaType.APPLICATION_JSON)

@@ -11,6 +11,7 @@ public record ProductResponse(
                 String imageUrl,
                 String unit,
                 Integer stockQuantity,
+                String origin,
                 Boolean isActive,
                 LocalDateTime createdAt,
                 LocalDateTime updatedAt) {
@@ -24,6 +25,7 @@ public record ProductResponse(
                                 product.getImageUrl(),
                                 product.getUnit(),
                                 product.getStockQuantity(),
+                                product.getOrigin(),
                                 product.getIsActive(),
                                 product.getCreatedAt(),
                                 product.getUpdatedAt());

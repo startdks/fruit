@@ -43,6 +43,9 @@ public class Product {
     @Column(name = "stock_quantity")
     private Integer stockQuantity = 0;
 
+    @Column(length = 100)
+    private String origin;
+
     @Column(name = "is_active")
     private Boolean isActive = true;
 

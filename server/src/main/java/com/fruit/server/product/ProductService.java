@@ -73,6 +73,7 @@ public class ProductService {
         product.setImageUrl(request.imageUrl());
         product.setUnit(request.unit());
         product.setStockQuantity(request.stockQuantity());
+        product.setOrigin(request.origin());
         product.setIsActive(request.isActive());
     }
 }

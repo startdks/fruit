@@ -21,6 +21,8 @@ public record ProductRequest(
 
         @PositiveOrZero(message = "Stock quantity must be 0 or greater") Integer stockQuantity,
 
+        @Size(max = 100, message = "Origin cannot exceed 100 characters") String origin,
+
         Boolean isActive) {
 
     public ProductRequest {
