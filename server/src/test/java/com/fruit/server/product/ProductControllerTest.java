@@ -63,11 +63,11 @@ class ProductControllerTest {
     // ========== GET /api/products ==========
 
     @Nested
-    @DisplayName("GET /api/products - 전체 상품 조회")
+    @DisplayName("GET /api/products - Get All Products")
     class GetAllProducts {
 
         @Test
-        @DisplayName("상품이 없을 때 빈 배열 반환")
+        @DisplayName("Returns empty list when no products exist")
         void returnsEmptyListWhenNoProducts() throws Exception {
             mockMvc.perform(get("/api/products"))
                     .andExpect(status().isOk())
@@ -75,7 +75,7 @@ class ProductControllerTest {
         }
 
         @Test
-        @DisplayName("상품 목록 조회 성공")
+        @DisplayName("Returns product list successfully")
         void returnsProductList() throws Exception {
             createAndSaveProduct("Apple", new BigDecimal("2.99"));
             createAndSaveProduct("Banana", new BigDecimal("1.49"));
@@ -88,7 +88,7 @@ class ProductControllerTest {
         }
 
         @Test
-        @DisplayName("활성 상품만 조회")
+        @DisplayName("Returns only active products")
         void returnsOnlyActiveProducts() throws Exception {
             Product active = createAndSaveProduct("Active Product", new BigDecimal("1.00"));
             Product inactive = createAndSaveProduct("Inactive Product", new BigDecimal("2.00"));
@@ -105,11 +105,11 @@ class ProductControllerTest {
     // ========== GET /api/products/{id} ==========
 
     @Nested
-    @DisplayName("GET /api/products/{id} - 상품 상세 조회")
+    @DisplayName("GET /api/products/{id} - Get Product By ID")
     class GetProductById {
 
         @Test
-        @DisplayName("존재하는 상품 조회 성공")
+        @DisplayName("Returns product when it exists")
         void returnsProductWhenExists() throws Exception {
             Product product = createAndSaveProduct("Apple", new BigDecimal("2.99"));
 
@@ -121,7 +121,7 @@ class ProductControllerTest {
         }
 
         @Test
-        @DisplayName("존재하지 않는 상품 조회시 404 반환")
+        @DisplayName("Returns 404 when product not found")
         void returns404WhenNotFound() throws Exception {
             mockMvc.perform(get("/api/products/{id}", 999L))
                     .andExpect(status().isNotFound());
@@ -131,11 +131,11 @@ class ProductControllerTest {
     // ========== POST /api/products ==========
 
     @Nested
-    @DisplayName("POST /api/products - 상품 생성")
+    @DisplayName("POST /api/products - Create Product")
     class CreateProduct {
 
         @Test
-        @DisplayName("유효한 요청으로 상품 생성 성공")
+        @DisplayName("Creates product with valid request")
         void createsProductWithValidRequest() throws Exception {
             ProductRequest request = createValidProductRequest();
 
@@ -149,10 +149,10 @@ class ProductControllerTest {
         }
 
         @Test
-        @DisplayName("이름 없이 요청시 400 반환")
+        @DisplayName("Returns 400 when name is missing")
         void returns400WhenNameMissing() throws Exception {
             ProductRequest request = new ProductRequest(
-                    "", // 빈 이름
+                    "", // empty name
                     "Description",
                     new BigDecimal("2.99"),
                     null, null, null, null);
@@ -164,12 +164,12 @@ class ProductControllerTest {
         }
 
         @Test
-        @DisplayName("가격 없이 요청시 400 반환")
+        @DisplayName("Returns 400 when price is missing")
         void returns400WhenPriceMissing() throws Exception {
             ProductRequest request = new ProductRequest(
                     "Apple",
                     "Description",
-                    null, // 가격 없음
+                    null, // no price
                     null, null, null, null);
 
             mockMvc.perform(post("/api/products")
@@ -179,12 +179,12 @@ class ProductControllerTest {
         }
 
         @Test
-        @DisplayName("음수 가격으로 요청시 400 반환")
+        @DisplayName("Returns 400 when price is negative")
         void returns400WhenPriceNegative() throws Exception {
             ProductRequest request = new ProductRequest(
                     "Apple",
                     "Description",
-                    new BigDecimal("-1.00"), // 음수 가격
+                    new BigDecimal("-1.00"), // negative price
                     null, null, null, null);
 
             mockMvc.perform(post("/api/products")
@@ -197,11 +197,11 @@ class ProductControllerTest {
     // ========== PUT /api/products/{id} ==========
 
     @Nested
-    @DisplayName("PUT /api/products/{id} - 상품 수정")
+    @DisplayName("PUT /api/products/{id} - Update Product")
     class UpdateProduct {
 
         @Test
-        @DisplayName("상품 수정 성공")
+        @DisplayName("Updates product successfully")
         void updatesProductSuccessfully() throws Exception {
             Product product = createAndSaveProduct("Old Name", new BigDecimal("1.00"));
             ProductRequest updateRequest = new ProductRequest(
@@ -220,7 +220,7 @@ class ProductControllerTest {
         }
 
         @Test
-        @DisplayName("존재하지 않는 상품 수정시 404 반환")
+        @DisplayName("Returns 404 when updating non-existent product")
         void returns404WhenUpdatingNonExistent() throws Exception {
             ProductRequest request = createValidProductRequest();
 
@@ -234,25 +234,25 @@ class ProductControllerTest {
     // ========== DELETE /api/products/{id} ==========
 
     @Nested
-    @DisplayName("DELETE /api/products/{id} - 상품 삭제")
+    @DisplayName("DELETE /api/products/{id} - Delete Product")
     class DeleteProduct {
 
         @Test
-        @DisplayName("상품 삭제 성공 (soft delete)")
+        @DisplayName("Deletes product successfully (soft delete)")
         void deletesProductSuccessfully() throws Exception {
             Product product = createAndSaveProduct("To Delete", new BigDecimal("1.00"));
 
             mockMvc.perform(delete("/api/products/{id}", product.getId()))
                     .andExpect(status().isNoContent());
 
-            // Soft delete이므로 조회는 가능하지만 isActive가 false
+            // Soft delete, so product is still retrievable but isActive is false
             mockMvc.perform(get("/api/products/{id}", product.getId()))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.isActive", is(false)));
         }
 
         @Test
-        @DisplayName("존재하지 않는 상품 삭제시 404 반환")
+        @DisplayName("Returns 404 when deleting non-existent product")
         void returns404WhenDeletingNonExistent() throws Exception {
             mockMvc.perform(delete("/api/products/{id}", 999L))
                     .andExpect(status().isNotFound());
@@ -262,11 +262,11 @@ class ProductControllerTest {
     // ========== GET /api/products/search ==========
 
     @Nested
-    @DisplayName("GET /api/products/search - 상품 검색")
+    @DisplayName("GET /api/products/search - Search Products")
     class SearchProducts {
 
         @Test
-        @DisplayName("이름으로 검색 성공")
+        @DisplayName("Searches products by name successfully")
         void searchesByName() throws Exception {
             createAndSaveProduct("Red Apple", new BigDecimal("2.99"));
             createAndSaveProduct("Green Apple", new BigDecimal("2.49"));
@@ -278,7 +278,7 @@ class ProductControllerTest {
         }
 
         @Test
-        @DisplayName("검색 결과 없을 때 빈 배열 반환")
+        @DisplayName("Returns empty list when no match found")
         void returnsEmptyWhenNoMatch() throws Exception {
             createAndSaveProduct("Apple", new BigDecimal("2.99"));
 
