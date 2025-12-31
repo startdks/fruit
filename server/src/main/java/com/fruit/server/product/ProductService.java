@@ -25,6 +25,12 @@ public class ProductService {
                 .toList();
     }
 
+    public List<ProductResponse> getProductsByOrigin(String origin) {
+        return productRepository.findByOrigin(origin).stream()
+                .map(ProductResponse::from)
+                .toList();
+    }
+
     public ProductResponse getProductById(Long id) {
         Product product = findProductById(id);
         return ProductResponse.from(product);
