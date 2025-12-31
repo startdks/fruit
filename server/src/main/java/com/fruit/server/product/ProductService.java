@@ -63,7 +63,7 @@ public class ProductService {
 
     public Product findProductById(Long id) {
         return productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+                .orElseThrow(() -> new ProductNotFoundException(id));
     }
 
     private void mapRequestToProduct(ProductRequest request, Product product) {
