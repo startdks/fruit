@@ -3,7 +3,6 @@ package com.fruit.server.cart;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fruit.server.user.User;
 
-import jakarta.annotation.sql.DataSourceDefinition;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -15,7 +14,7 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
