@@ -21,10 +21,10 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    @Value("${jwt.secret:aklsjfe@sadb123lkjaf&1230fefasdaf(*adsf&as%UoisflzsjLzxcKJLaJcKzscf239223}")
+    @Value("${jwt.secret}")
     private String secretKey;
 
-    @Value("${jwt.expiration:86400000}") // 24 hours in milliseconds
+    @Value("${jwt.expiration}")
     private long jwtExpiration;
 
     /**
