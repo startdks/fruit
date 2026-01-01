@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import java.math.BigDecimal;
 
@@ -137,6 +138,7 @@ class ProductControllerTest {
 
         @Test
         @DisplayName("Creates product with valid request")
+        @WithMockUser
         void createsProductWithValidRequest() throws Exception {
             ProductRequest request = createValidProductRequest();
 
@@ -151,6 +153,7 @@ class ProductControllerTest {
 
         @Test
         @DisplayName("Returns 400 when name is missing")
+        @WithMockUser
         void returns400WhenNameMissing() throws Exception {
             ProductRequest request = new ProductRequest(
                     "", // empty name
@@ -166,6 +169,7 @@ class ProductControllerTest {
 
         @Test
         @DisplayName("Returns 400 when price is missing")
+        @WithMockUser
         void returns400WhenPriceMissing() throws Exception {
             ProductRequest request = new ProductRequest(
                     "Apple",
@@ -181,6 +185,7 @@ class ProductControllerTest {
 
         @Test
         @DisplayName("Returns 400 when price is negative")
+        @WithMockUser
         void returns400WhenPriceNegative() throws Exception {
             ProductRequest request = new ProductRequest(
                     "Apple",
@@ -203,6 +208,7 @@ class ProductControllerTest {
 
         @Test
         @DisplayName("Updates product successfully")
+        @WithMockUser
         void updatesProductSuccessfully() throws Exception {
             Product product = createAndSaveProduct("Old Name", new BigDecimal("1.00"));
             ProductRequest updateRequest = new ProductRequest(
@@ -222,6 +228,7 @@ class ProductControllerTest {
 
         @Test
         @DisplayName("Returns 404 when updating non-existent product")
+        @WithMockUser
         void returns404WhenUpdatingNonExistent() throws Exception {
             ProductRequest request = createValidProductRequest();
 
@@ -240,6 +247,7 @@ class ProductControllerTest {
 
         @Test
         @DisplayName("Deletes product successfully (soft delete)")
+        @WithMockUser
         void deletesProductSuccessfully() throws Exception {
             Product product = createAndSaveProduct("To Delete", new BigDecimal("1.00"));
 
@@ -254,6 +262,7 @@ class ProductControllerTest {
 
         @Test
         @DisplayName("Returns 404 when deleting non-existent product")
+        @WithMockUser
         void returns404WhenDeletingNonExistent() throws Exception {
             mockMvc.perform(delete("/api/products/{id}", 999L))
                     .andExpect(status().isNotFound());
