@@ -51,8 +51,13 @@ public class SecurityConfig {
                         .requestMatchers("/api/contact/**").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
 
+                        // Cart: GET/POST allowed for guests, PUT/DELETE require auth
+                        .requestMatchers(HttpMethod.GET, "/api/cart", "/api/cart/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/cart").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/cart/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/cart/**").authenticated()
+
                         // Protected endpoints - require authentication
-                        .requestMatchers("/api/cart/**").authenticated()
                         .requestMatchers("/api/orders/**").authenticated()
 
                         // All other requests require authentication
