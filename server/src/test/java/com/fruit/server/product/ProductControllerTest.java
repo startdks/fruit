@@ -10,7 +10,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import java.math.BigDecimal;
@@ -92,7 +91,7 @@ class ProductControllerTest {
         @Test
         @DisplayName("Returns only active products")
         void returnsOnlyActiveProducts() throws Exception {
-            Product active = createAndSaveProduct("Active Product", new BigDecimal("1.00"));
+            createAndSaveProduct("Active Product", new BigDecimal("1.00"));
             Product inactive = createAndSaveProduct("Inactive Product", new BigDecimal("2.00"));
             inactive.setIsActive(false);
             productRepository.save(inactive);

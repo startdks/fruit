@@ -7,6 +7,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fruit.server.exception.ResourceNotFoundException;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -69,7 +71,7 @@ public class ProductService {
 
     public Product findProductById(Long id) {
         return productRepository.findById(id)
-                .orElseThrow(() -> new ProductNotFoundException(id));
+                .orElseThrow(() -> new ResourceNotFoundException("Product", id));
     }
 
     private void mapRequestToProduct(ProductRequest request, Product product) {
