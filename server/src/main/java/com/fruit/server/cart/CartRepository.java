@@ -14,5 +14,5 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
         return findByUserIdAndStatus(userId, CartStatus.ACTIVE);
     }
 
-    Optional<Cart> findByUserIsNotNullAndStatus(CartStatus status);
+    Optional<Cart> findByUserIsNullAndStatus(CartStatus status);
 }
