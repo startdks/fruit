@@ -52,6 +52,11 @@ public class SecurityConfig {
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/api/cart/**").permitAll()
 
+                        // Block product modifications (no admin role yet)
+                        .requestMatchers(HttpMethod.POST, "/api/products/**").denyAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/products/**").denyAll()
+                        .requestMatchers(HttpMethod.DELETE, "/api/products/**").denyAll()
+
                         // Protected endpoints - require authentication
                         .requestMatchers("/api/orders/**").authenticated()
 

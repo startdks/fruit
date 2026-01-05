@@ -136,24 +136,21 @@ class ProductControllerTest {
     class CreateProduct {
 
         @Test
-        @DisplayName("Creates product with valid request")
+        @DisplayName("Returns 403 - product creation is denied")
         @WithMockUser
-        void createsProductWithValidRequest() throws Exception {
+        void returns403WhenCreatingProduct() throws Exception {
             ProductRequest request = createValidProductRequest();
 
             mockMvc.perform(post("/api/products")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request)))
-                    .andExpect(status().isCreated())
-                    .andExpect(jsonPath("$.id").exists())
-                    .andExpect(jsonPath("$.name", is("Fresh Apple")))
-                    .andExpect(jsonPath("$.price", is(2.99)));
+                    .andExpect(status().isForbidden());
         }
 
         @Test
-        @DisplayName("Returns 400 when name is missing")
+        @DisplayName("Returns 403 when name is missing - denied before validation")
         @WithMockUser
-        void returns400WhenNameMissing() throws Exception {
+        void returns403WhenNameMissing() throws Exception {
             ProductRequest request = new ProductRequest(
                     "", // empty name
                     "Description",
@@ -163,13 +160,13 @@ class ProductControllerTest {
             mockMvc.perform(post("/api/products")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request)))
-                    .andExpect(status().isBadRequest());
+                    .andExpect(status().isForbidden());
         }
 
         @Test
-        @DisplayName("Returns 400 when price is missing")
+        @DisplayName("Returns 403 when price is missing - denied before validation")
         @WithMockUser
-        void returns400WhenPriceMissing() throws Exception {
+        void returns403WhenPriceMissing() throws Exception {
             ProductRequest request = new ProductRequest(
                     "Apple",
                     "Description",
@@ -179,13 +176,13 @@ class ProductControllerTest {
             mockMvc.perform(post("/api/products")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request)))
-                    .andExpect(status().isBadRequest());
+                    .andExpect(status().isForbidden());
         }
 
         @Test
-        @DisplayName("Returns 400 when price is negative")
+        @DisplayName("Returns 403 when price is negative - denied before validation")
         @WithMockUser
-        void returns400WhenPriceNegative() throws Exception {
+        void returns403WhenPriceNegative() throws Exception {
             ProductRequest request = new ProductRequest(
                     "Apple",
                     "Description",
@@ -195,7 +192,7 @@ class ProductControllerTest {
             mockMvc.perform(post("/api/products")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request)))
-                    .andExpect(status().isBadRequest());
+                    .andExpect(status().isForbidden());
         }
     }
 
@@ -206,9 +203,9 @@ class ProductControllerTest {
     class UpdateProduct {
 
         @Test
-        @DisplayName("Updates product successfully")
+        @DisplayName("Returns 403 - product update is denied")
         @WithMockUser
-        void updatesProductSuccessfully() throws Exception {
+        void returns403WhenUpdatingProduct() throws Exception {
             Product product = createAndSaveProduct("Old Name", new BigDecimal("1.00"));
             ProductRequest updateRequest = new ProductRequest(
                     "New Name",
@@ -219,22 +216,19 @@ class ProductControllerTest {
             mockMvc.perform(put("/api/products/{id}", product.getId())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(updateRequest)))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.name", is("New Name")))
-                    .andExpect(jsonPath("$.price", is(5.99)))
-                    .andExpect(jsonPath("$.unit", is("kg")));
+                    .andExpect(status().isForbidden());
         }
 
         @Test
-        @DisplayName("Returns 404 when updating non-existent product")
+        @DisplayName("Returns 403 when updating non-existent product - denied before check")
         @WithMockUser
-        void returns404WhenUpdatingNonExistent() throws Exception {
+        void returns403WhenUpdatingNonExistent() throws Exception {
             ProductRequest request = createValidProductRequest();
 
             mockMvc.perform(put("/api/products/{id}", 999L)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request)))
-                    .andExpect(status().isNotFound());
+                    .andExpect(status().isForbidden());
         }
     }
 
@@ -245,26 +239,21 @@ class ProductControllerTest {
     class DeleteProduct {
 
         @Test
-        @DisplayName("Deletes product successfully (soft delete)")
+        @DisplayName("Returns 403 - product deletion is denied")
         @WithMockUser
-        void deletesProductSuccessfully() throws Exception {
+        void returns403WhenDeletingProduct() throws Exception {
             Product product = createAndSaveProduct("To Delete", new BigDecimal("1.00"));
 
             mockMvc.perform(delete("/api/products/{id}", product.getId()))
-                    .andExpect(status().isNoContent());
-
-            // Soft delete, so product is still retrievable but isActive is false
-            mockMvc.perform(get("/api/products/{id}", product.getId()))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.isActive", is(false)));
+                    .andExpect(status().isForbidden());
         }
 
         @Test
-        @DisplayName("Returns 404 when deleting non-existent product")
+        @DisplayName("Returns 403 when deleting non-existent product - denied before check")
         @WithMockUser
-        void returns404WhenDeletingNonExistent() throws Exception {
+        void returns403WhenDeletingNonExistent() throws Exception {
             mockMvc.perform(delete("/api/products/{id}", 999L))
-                    .andExpect(status().isNotFound());
+                    .andExpect(status().isForbidden());
         }
     }
 
