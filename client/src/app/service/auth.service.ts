@@ -1,8 +1,73 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { AuthResponse, LoginRequest, RegisterRequest } from '../models/models';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class AuthService {
-  
+  private readonly API_URL = 'http://localhost:8080/api/auth';
+  private currentUserSubject = new BehaviorSubject<AuthResponse | null>(null);
+  public currentUser$ = this.currentUserSubject.asObservable();
+
+  constructor(private http: HttpClient) {
+    // Load user from localStorage on initialization
+    const savedUser = localStorage.getItem('currentUser');
+    if (savedUser) {
+      this.currentUserSubject.next(JSON.parse(savedUser));
+    }
+  }
+
+  register(request: RegisterRequest): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.API_URL}/register`, request).pipe(
+      tap(response => {
+        if (response.userId && response.token) {
+          this.setCurrentUser(response);
+        }
+      })
+    );
+  }
+
+  login(request: LoginRequest): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.API_URL}/login`, request).pipe(
+      tap(response => {
+        if (response.userId && response.token) {
+          this.setCurrentUser(response);
+        }
+      })
+    );
+  }
+
+  logout(): void {
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('authToken');
+    this.currentUserSubject.next(null);
+  }
+
+  private setCurrentUser(user: AuthResponse): void {
+    localStorage.setItem('currentUser', JSON.stringify(user));
+    // Store token separately for easy access
+    if (user.token) {
+      localStorage.setItem('authToken', user.token);
+    }
+    this.currentUserSubject.next(user);
+  }
+
+  getCurrentUser(): AuthResponse | null {
+    return this.currentUserSubject.value;
+  }
+
+  /**
+   * Get the JWT token for use in HTTP requests
+   */
+  getToken(): string | null {
+    return localStorage.getItem('authToken');
+  }
+
+  isLoggedIn(): boolean {
+    return this.currentUserSubject.value !== null &&
+      this.currentUserSubject.value.userId !== null &&
+      this.getToken() !== null;
+  }
 }
