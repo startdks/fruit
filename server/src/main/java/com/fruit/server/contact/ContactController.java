@@ -41,9 +41,9 @@ public class ContactController {
         return ResponseEntity.ok(unreadMessages);
     }
 
-    @PatchMapping("/{id}/read")
-    public ResponseEntity<ContactMessage> markAsRead(@PathVariable Long id) {
-        ContactMessage message = contactService.markAsRead(id);
+    @PatchMapping("/{messageId}/read")
+    public ResponseEntity<ContactMessage> markAsRead(@PathVariable Long messageId) {
+        ContactMessage message = contactService.markAsRead(messageId);
         return ResponseEntity.ok(message);
     }
 }
