@@ -38,7 +38,7 @@ public class DataInitializer implements CommandLineRunner {
                 "https://images.unsplash.com/photo-1550258987-190a2d41a8ba?w=400", 70);
         createProduct("Sweet Watermelons", "Refreshing summer watermelons", "3.49",
                 "https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=400", 90);
-        System.out.println("✅ Database initialized with sample products!");
+        System.out.println("Database initialized with sample products!");
     }
 
     private void createProduct(String name, String description, String price, String imageUrl, int stock) {
