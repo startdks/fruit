@@ -7,7 +7,7 @@ on:
     branches: [ main, master ]
 
 jobs:
-  backend:
+  backend-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -27,7 +27,7 @@ jobs:
       - name: Build application
         run: cd server && ./mvnw package -DskipTests
 
-  frontend:
+  frontend-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -49,3 +49,5 @@ jobs:
 
       - name: Build application
         run: cd client && npm run build
+
+
