@@ -1,1 +1,33 @@
-<p>footer works!</p>
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="logo">
+                    <span class="logo-icon">🍎</span>
+                    <span class="logo-text">FreshFruit</span>
+                </div>
+                <p>Your trusted source for fresh, premium quality fruits.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li> <a href="#" (click)="smoothScroll('#home'); $event.preventDefault()">Home</a></li>
+                    <li> <a href="#" (click)="smoothScroll('#products'); $event.preventDefault()">Products</a></li>
+                    <li> <a href="#" (click)="smoothScroll('#about'); $event.preventDefault()">About</a></li>
+                    <li> <a href="#" (click)="smoothScroll('#contact'); $event.preventDefault()">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Follow Us</h4>
+                <div class="social-links">
+                    <a href="#">📘</a>
+                    <a href="#">📷</a>
+                    <a href="#">🐦</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 FreshFruit. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
