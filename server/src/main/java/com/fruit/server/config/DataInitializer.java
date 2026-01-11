@@ -4,6 +4,7 @@ import com.fruit.server.product.Product;
 import com.fruit.server.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -16,32 +17,37 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        // Check if products already exist
+        // 이미 상품이 있으면 초기화 스킵
         if (productRepository.count() > 0) {
+            System.out.println("✅ Products already exist. Skipping initialization.");
             return;
         }
 
-        // Initialize sample products with real image URLs
+        // Initialize sample products with single fruit on white background (local
+        // images)
         createProduct("Fresh Apples", "Crisp and juicy red apples", "4.99",
-                "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=400", 100);
+                "/images/product-apple.png", 100, "South Korea");
         createProduct("Sweet Oranges", "Vitamin C rich oranges", "3.99",
-                "https://images.unsplash.com/photo-1547514701-42782101795e?w=400", 150);
+                "/images/product-orange.png", 150, "USA");
         createProduct("Ripe Bananas", "Perfectly ripened bananas", "2.99",
-                "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=400", 200);
+                "/images/product-banana.png", 200, "Philippines");
         createProduct("Fresh Strawberries", "Sweet and succulent berries", "5.99",
-                "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=400", 80);
+                "/images/product-strawberry.png", 80, "Japan");
         createProduct("Juicy Grapes", "Seedless premium grapes", "4.49",
-                "https://images.unsplash.com/photo-1537640538966-79f369143f8f?w=400", 120);
+                "/images/product-grapes.png", 120, "Chile");
         createProduct("Tropical Mangoes", "Sweet tropical mangoes", "6.99",
-                "https://images.unsplash.com/photo-1553279768-865429fa0078?w=400", 60);
+                "/images/product-mango.png", 60, "Thailand");
         createProduct("Fresh Pineapples", "Tropical sweet pineapples", "5.49",
-                "https://images.unsplash.com/photo-1550258987-190a2d41a8ba?w=400", 70);
+                "/images/product-pineapple.png", 70, "Philippines");
         createProduct("Sweet Watermelons", "Refreshing summer watermelons", "3.49",
-                "https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=400", 90);
-        System.out.println("Database initialized with sample products!");
+                "/images/product-watermelon.png", 90,
+                "Taiwan");
+
+        System.out.println("✅ Database initialized with sample products!");
     }
 
-    private void createProduct(String name, String description, String price, String imageUrl, int stock) {
+    private void createProduct(String name, String description, String price, String imageUrl, int stock,
+            String origin) {
         Product product = new Product();
         product.setName(name);
         product.setDescription(description);
@@ -49,6 +55,7 @@ public class DataInitializer implements CommandLineRunner {
         product.setImageUrl(imageUrl);
         product.setUnit("lb");
         product.setStockQuantity(stock);
+        product.setOrigin(origin);
         product.setIsActive(true);
         productRepository.save(product);
     }
