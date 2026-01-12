@@ -3,6 +3,7 @@ import { Component, Input } from '@angular/core';
 
 @Component({
     selector: 'app-notification',
+    standalone: true,
     imports: [CommonModule],
     templateUrl: './notification.html',
     styleUrl: './notification.scss',
