@@ -9,7 +9,7 @@ describe('ProductService', () => {
     let service: ProductService;
     let httpMock: HttpTestingController;
 
-    const API_URL = 'http://localhost:8080/api/products';
+    const API_URL = 'https://xj9iw8ynrf.execute-api.us-east-1.amazonaws.com/api/products';
 
     // Mock product data
     const mockProduct: Product = {
