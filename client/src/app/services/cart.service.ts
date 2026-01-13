@@ -8,7 +8,7 @@ import { Cart, CartItem, CartItemRequest } from '../models/models';
     providedIn: 'root',
 })
 export class CartService {
-    private readonly API_URL = 'http://localhost:8080/api/cart';
+    private readonly API_URL = 'https://xj9iw8ynrf.execute-api.us-east-1.amazonaws.com/api/cart';
     private cartCountSubject = new BehaviorSubject<number>(0);
     public cartCount$ = this.cartCountSubject.asObservable();
 

@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
     providedIn: 'root',
 })
 export class AuthService {
-    private readonly API_URL = "http://localhost:8080/api/auth";
+    private readonly API_URL = "https://xj9iw8ynrf.execute-api.us-east-1.amazonaws.com/api/auth";
     private currentUserSubject = new BehaviorSubject<AuthResponse | null>(null);
     public currentUser$ = this.currentUserSubject.asObservable();
 

@@ -7,7 +7,7 @@ import { Product } from '../models/models';
     providedIn: 'root',
 })
 export class ProductService {
-    private readonly API_URL = "http://localhost:8080/api/products";
+    private readonly API_URL = "https://xj9iw8ynrf.execute-api.us-east-1.amazonaws.com/api/products";
     constructor(private http: HttpClient) { }
 
     getAllProducts(isActive: boolean = true): Observable<Product[]> {

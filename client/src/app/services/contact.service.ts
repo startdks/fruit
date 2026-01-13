@@ -7,7 +7,7 @@ import { ContactMessage } from '../models/models';
     providedIn: 'root',
 })
 export class ContactService {
-    private readonly API_URL = 'http://localhost:8080/api/contact';
+    private readonly API_URL = 'https://xj9iw8ynrf.execute-api.us-east-1.amazonaws.com/api/contact';
 
     constructor(private http: HttpClient) { }
 
