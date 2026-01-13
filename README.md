@@ -2,7 +2,7 @@
 
 # Fruit Shop
 
-과일 쇼핑몰 풀스택 웹 애플리케이션
+A full-stack e-commerce web application for a fruit shop.
 
 ## Tech Stack
 
@@ -17,10 +17,10 @@
 
 ## Features
 
--   상품 조회 및 장바구니 관리
--   JWT 기반 회원가입/로그인
--   주문 생성
--   Contact 문의
+-   Product listing and cart management
+-   JWT-based authentication (register/login)
+-   Order creation
+-   Contact form
 
 ## Project Structure
 
@@ -33,10 +33,10 @@
 │
 └── server/                 # Spring Boot Backend
     └── src/main/java/com/fruit/server/
-        ├── cart/           # 장바구니 도메인
-        ├── order/          # 주문 도메인
-        ├── product/        # 상품 도메인
-        └── user/           # 사용자 및 인증
+        ├── cart/           # Cart domain
+        ├── order/          # Order domain
+        ├── product/        # Product domain
+        └── user/           # User and authentication
 ```
 
 ## Getting Started
@@ -58,7 +58,7 @@ cd server
 
 ## Deployment
 
-GitHub Actions를 통해 자동 배포:
+Automated deployment via GitHub Actions:
 
 -   Backend: ECR → ECS Fargate
 -   Frontend: S3 → CloudFront
