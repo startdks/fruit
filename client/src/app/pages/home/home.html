@@ -1,1 +1,211 @@
-<p>home works!</p>
+<!-- Hero Section with Carousel -->
+<section
+  id="home"
+  class="hero"
+  [style.background-image]="'url(' + heroSlides[currentSlide].image + ')'"
+>
+  <!-- Navigation Arrows -->
+  <button class="hero-nav hero-nav-prev" (click)="prevSlide()">
+    <span>‹</span>
+  </button>
+  <button class="hero-nav hero-nav-next" (click)="nextSlide()">
+    <span>›</span>
+  </button>
+
+  <div class="hero-content">
+    <p class="hero-tagline">{{ heroSlides[currentSlide].tagline }}</p>
+    <h1 class="hero-title">{{ heroSlides[currentSlide].title }}</h1>
+    <p class="hero-subtitle">{{ heroSlides[currentSlide].subtitle }}</p>
+    <div class="hero-buttons">
+      <a
+        href="#"
+        (click)="smoothScroll('#products'); $event.preventDefault()"
+        class="btn btn-primary"
+        >Shop Now <span class="btn-arrow">›</span></a
+      >
+      <a
+        href="#"
+        (click)="smoothScroll('#about'); $event.preventDefault()"
+        class="btn btn-secondary"
+        >Learn More <span class="btn-arrow">›</span></a
+      >
+    </div>
+  </div>
+
+  <!-- Slide Indicators -->
+  <div class="hero-indicators">
+    @for (slide of heroSlides; track slide.id; let i = $index) {
+    <button class="indicator" [class.active]="i === currentSlide" (click)="goToSlide(i)"></button>
+    }
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="features">
+  <div class="container">
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🚚</div>
+        <h3>Free Delivery</h3>
+        <p>Free delivery on orders over $50</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌱</div>
+        <h3>100% Organic</h3>
+        <p>All our fruits are certified organic</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⭐</div>
+        <h3>Premium Quality</h3>
+        <p>Hand-picked fresh fruits daily</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💚</div>
+        <h3>Healthy Living</h3>
+        <p>Supporting your wellness journey</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Products Section -->
+<section id="products" class="products">
+  <div class="container">
+    <h2 class="section-title">Our Fresh Products</h2>
+    <p class="section-subtitle">Discover our wide selection of premium fruits</p>
+    <div class="products-grid">
+      @for (product of products(); track product.id) {
+      <div class="product-card">
+        <img class="product-image" [src]="product.imageUrl" [alt]="product.name" />
+        <h3>{{ product.name }}</h3>
+        <p class="product-description">{{ product.description }}</p>
+        <p class="product-origin">📍 {{ product.origin }}</p>
+        <p class="product-price">${{ product.price.toFixed(2) }} / {{ product.unit }}</p>
+        <button class="btn btn-primary btn-product" (click)="addToCart(product.id)">
+          Add to Cart
+        </button>
+      </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- About Section -->
+<section id="about" class="about">
+  <div class="container">
+    <div class="about-content">
+      <div class="about-text">
+        <h2 class="section-title">About FreshFruit</h2>
+        <p>
+          Welcome to FreshFruit, your trusted source for premium quality fruits. We've been serving
+          our community with the freshest, most delicious fruits for over a decade.
+        </p>
+        <p>
+          Our commitment to quality means we work directly with local farmers to bring you the best
+          produce. Every fruit is carefully selected to ensure it meets our high standards for
+          freshness and taste.
+        </p>
+        <p>
+          We believe that eating healthy should be easy and enjoyable. That's why we offer a wide
+          variety of organic fruits, convenient delivery options, and competitive prices.
+        </p>
+        <div class="about-stats">
+          <div class="stat">
+            <h3>10+</h3>
+            <p>Years of Experience</p>
+          </div>
+          <div class="stat">
+            <h3>500+</h3>
+            <p>Happy Customers</p>
+          </div>
+          <div class="stat">
+            <h3>50+</h3>
+            <p>Fruit Varieties</p>
+          </div>
+        </div>
+      </div>
+      <div class="about-image">
+        <div class="image-placeholder">🥑</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="contact">
+  <div class="container">
+    <h2 class="section-title">Get in Touch</h2>
+    <p class="section-subtitle">We'd love to hear from you</p>
+    <div class="contact-content">
+      <div class="contact-info">
+        <div class="contact-item">
+          <div class="contact-icon">📍</div>
+          <div>
+            <h3>Address</h3>
+            <p>123 Fruit Street<br />Fresh City, FC 12345</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📞</div>
+          <div>
+            <h3>Phone</h3>
+            <p>(555) 123-4567</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">✉️</div>
+          <div>
+            <h3>Email</h3>
+            <p>info&#64;freshfruit.com</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">🕒</div>
+          <div>
+            <h3>Hours</h3>
+            <p>Mon-Sat: 8AM - 8PM<br />Sunday: 10AM - 6PM</p>
+          </div>
+        </div>
+      </div>
+      <form class="contact-form" (ngSubmit)="handleContactSubmit()">
+        <div class="form-group">
+          <input
+            type="text"
+            [(ngModel)]="contactForm.name"
+            name="name"
+            placeholder="Your Name"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <input
+            type="email"
+            [(ngModel)]="contactForm.email"
+            name="email"
+            placeholder="Your Email"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <input
+            type="text"
+            [(ngModel)]="contactForm.subject"
+            name="subject"
+            placeholder="Subject"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <textarea
+            [(ngModel)]="contactForm.message"
+            name="message"
+            placeholder="Your Message"
+            rows="5"
+            required
+          ></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Send Message</button>
+      </form>
+    </div>
+  </div>
+</section>

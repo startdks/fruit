@@ -65,13 +65,13 @@ export interface Order {
 }
 
 export interface ContactMessage {
-    id: number;
+    id?: number;
     name: string;
     email: string;
     subject: string;
     message: string;
-    isRead: boolean;
-    cratedAt: Date;
+    isRead?: boolean;
+    cratedAt?: Date;
 }
 
 export interface LoginRequest {
