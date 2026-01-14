@@ -6,14 +6,14 @@ import { CartService } from '../../services/cart.service';
 import { ContactService } from '../../services/contact.service';
 import { NotificationService } from '../../services/notification.service';
 import { AuthService } from '../../services/auth.service';
-import { Product, ContactMessage } from '../../models/models';
+import { Product, ContactMessage } from '../../models';
 
 @Component({
     selector: 'app-home',
     standalone: true,
     imports: [CommonModule, FormsModule],
-    templateUrl: './home.html',
-    styleUrls: ['./home.scss']
+    templateUrl: './home.component.html',
+    styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
     // Products

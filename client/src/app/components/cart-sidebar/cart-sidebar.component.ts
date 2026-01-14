@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Cart } from '../../models/models';
+import { Cart } from '../../models';
 
 @Component({
     selector: 'app-cart-sidebar',
     standalone: true,
     imports: [CommonModule],
-    templateUrl: './cart-sidebar.html',
-    styleUrl: './cart-sidebar.scss',
+    templateUrl: './cart-sidebar.component.html',
+    styleUrl: './cart-sidebar.component.scss',
 })
 export class CartSidebarComponent {
     @Input() isOpen: boolean = false;

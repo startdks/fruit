@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { AuthResponse } from '../../models/models';
+import { AuthResponse } from '../../models';
 
 @Component({
     selector: 'app-navbar',
     standalone: true,
     imports: [CommonModule],
-    templateUrl: './navbar.html',
-    styleUrl: './navbar.scss',
+    templateUrl: './navbar.component.html',
+    styleUrl: './navbar.component.scss',
 })
 export class NavbarComponent {
     @Input() currentUser: AuthResponse | null = null

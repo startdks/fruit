@@ -5,19 +5,17 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { CartService } from '../../../services/cart.service';
 import { NotificationService } from '../../../services/notification.service';
-import { LoginRequest } from '../../../models/models';
+import { LoginRequest } from '../../../models';
 
 @Component({
     selector: 'app-login',
     standalone: true,
     imports: [CommonModule, FormsModule, RouterLink],
-    templateUrl: './login.html',
-    styleUrls: ['./login.scss']
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
     loginForm: LoginRequest = { email: '', password: '' };
-
-    @Output() onNotification = new EventEmitter<string>();
 
     constructor(
         private authService: AuthService,

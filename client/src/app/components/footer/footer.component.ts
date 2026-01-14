@@ -5,8 +5,8 @@ import { Component } from '@angular/core';
     selector: 'app-footer',
     standalone: true,
     imports: [CommonModule],
-    templateUrl: './footer.html',
-    styleUrl: './footer.scss',
+    templateUrl: './footer.component.html',
+    styleUrl: './footer.component.scss',
 })
 export class FooterComponent {
     smoothScroll(target: string): void {

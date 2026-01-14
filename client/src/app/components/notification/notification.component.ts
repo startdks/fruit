@@ -5,8 +5,8 @@ import { Component, Input } from '@angular/core';
     selector: 'app-notification',
     standalone: true,
     imports: [CommonModule],
-    templateUrl: './notification.html',
-    styleUrl: './notification.scss',
+    templateUrl: './notification.component.html',
+    styleUrl: './notification.component.scss',
 })
 export class NotificationComponent {
     @Input() message: string = '';
