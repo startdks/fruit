@@ -1,11 +1,48 @@
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
+import { CartService } from '../../../services/cart.service';
+import { NotificationService } from '../../../services/notification.service';
+import { LoginRequest } from '../../../models/models';
 
 @Component({
     selector: 'app-login',
-    imports: [],
+    standalone: true,
+    imports: [CommonModule, FormsModule, RouterLink],
     templateUrl: './login.html',
-    styleUrl: './login.scss',
+    styleUrls: ['./login.scss']
 })
-export class Login {
+export class LoginComponent {
+    loginForm: LoginRequest = { email: '', password: '' };
 
+    @Output() onNotification = new EventEmitter<string>();
+
+    constructor(
+        private authService: AuthService,
+        private cartService: CartService,
+        private notificationService: NotificationService,
+        private router: Router
+    ) { }
+
+    handleLogin(): void {
+        this.authService.login(this.loginForm).subscribe({
+            next: (response) => {
+                if (response.userId) {
+                    // Show welcome message
+                    this.notificationService.show(`Welcome back! ${response.fullName}`);
+
+                    // Transfer guest cart to logged-in user
+                    this.cartService.transferGuestCart(response.userId).subscribe({
+                        next: () => this.router.navigate(['/']),
+                        error: () => this.router.navigate(['/'])
+                    });
+                } else {
+                    alert(response.message || 'Login failed');
+                }
+            },
+            error: (err) => alert('Login failed. Please try again.')
+        });
+    }
 }
