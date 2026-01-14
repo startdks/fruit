@@ -1,12 +1,4 @@
-<app-navbar
-  [currentUser]="currentUser()"
-  [cartCount]="cartCount()"
-  (onSignInClick)="handleSignInClick()"
-  (onLogout)="handleLogout()"
-  (onCartClick)="toggleCartSidebar()"
-  (onNavigate)="handleNavigate($event)"
->
-</app-navbar>
+<app-navbar> </app-navbar>
 
 <main>
   <router-outlet></router-outlet>
@@ -14,14 +6,6 @@
 
 <app-footer></app-footer>
 
-<app-cart-sidebar
-  [isOpen]="showCartSidebar"
-  [cart]="cart()"
-  (onClose)="showCartSidebar = false"
-  (onUpdateQuantity)="updateCartQuantity($event)"
-  (onRemove)="removeFromCart($event)"
-  (onCheckout)="handleCheckout()"
->
-</app-cart-sidebar>
+<app-cart-sidebar> </app-cart-sidebar>
 
-<app-notification [message]="notification()"></app-notification>
+<app-notification></app-notification>
