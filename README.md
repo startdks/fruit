@@ -4,6 +4,10 @@
 
 A full-stack e-commerce web application for a fruit shop.
 
+## Demo
+
+**Live:** [Visit Site](https://d28chu8xpcbqbf.cloudfront.net)
+
 ## Tech Stack
 
 | Layer    | Technology                                |
@@ -17,10 +21,10 @@ A full-stack e-commerce web application for a fruit shop.
 
 ## Features
 
--   Product listing and cart management
--   JWT-based authentication (register/login)
--   Order creation
--   Contact form
+- Product listing and cart management
+- JWT-based authentication (register/login)
+- Order creation
+- Contact form
 
 ## Project Structure
 
@@ -60,5 +64,5 @@ cd server
 
 Automated deployment via GitHub Actions:
 
--   Backend: ECR → ECS Fargate
--   Frontend: S3 → CloudFront
+- Backend: ECR → ECS Fargate
+- Frontend: S3 → CloudFront
