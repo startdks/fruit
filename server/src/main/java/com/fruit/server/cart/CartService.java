@@ -25,15 +25,15 @@ public class CartService {
     // Public API methods for Controller - returns DTOs
 
     // Get cart for user
-    public CartResponse getCartResponse(Long userId) {
-        List<CartItem> items = getCartItems(userId);
+    public CartResponse getCartResponse(Long userId, String guestToken) {
+        List<CartItem> items = getCartItems(userId, guestToken);
         return CartResponse.from(items);
     }
 
     // Add product to cart
     @Transactional
-    public CartItemResponse addToCartAndGetResponse(Long userId, Long productId, Integer quantity) {
-        CartItem item = addToCart(userId, productId, quantity);
+    public CartItemResponse addToCartAndGetResponse(Long userId, Long productId, Integer quantity, String guestToken) {
+        CartItem item = addToCart(userId, productId, quantity, guestToken);
         return CartItemResponse.from(item);
     }
 
@@ -52,8 +52,8 @@ public class CartService {
 
     // Transfer guest cart to user cart
     @Transactional
-    public void transferGuestCartToUser(Long userId) {
-        var guestCartOpt = cartRepository.findByUserIsNullAndStatus(CartStatus.ACTIVE);
+    public void transferGuestCartToUser(Long userId, String guestToken) {
+        Optional<Cart> guestCartOpt = cartRepository.findActiveCartByGuestToken(guestToken);
         if (guestCartOpt.isEmpty()) {
             return;
         }
@@ -65,10 +65,10 @@ public class CartService {
             return;
         }
 
-        Cart userCart = getOrCreateActiveCart(userId);
+        Cart userCart = getOrCreateActiveCart(userId, null);
 
         for (CartItem guestItem : guestItems) {
-            var existingItem = cartItemRepository.findByCartIdAndProductId(
+            Optional<CartItem> existingItem = cartItemRepository.findByCartIdAndProductId(
                     userCart.getId(), guestItem.getProduct().getId());
 
             if (existingItem.isPresent()) {
@@ -90,59 +90,62 @@ public class CartService {
     // Clear all items in cart
     @Transactional
     public void clearCart(Long userId) {
-        Cart cart = getOrCreateActiveCart(userId);
+        Cart cart = getOrCreateActiveCart(userId, null);
         cartItemRepository.deleteByCartId(cart.getId());
     }
 
     // Mark cart as converted to order
     @Transactional
     public void convertCartToOrder(Long userId) {
-        Cart cart = getOrCreateActiveCart(userId);
+        Cart cart = getOrCreateActiveCart(userId, null);
         cart.setStatus(CartStatus.CONVERTED_TO_ORDER);
         cartRepository.save(cart);
     }
 
     // Get active cart entity
     public Cart getActiveCart(Long userId) {
-        return getOrCreateActiveCart(userId);
+        return getOrCreateActiveCart(userId, null);
     }
 
     // Private helper methods
 
     // Get or create active cart for user
     @Transactional
-    Cart getOrCreateActiveCart(Long userId) {
+    Cart getOrCreateActiveCart(Long userId, String guestToken) {
         if (userId != null) {
             return cartRepository.findActiveCartByUserId(userId)
-                    .orElseGet(() -> createNewCart(userId));
+                    .orElseGet(() -> createNewCart(userId, null));
+        } else if (guestToken != null) {
+            return cartRepository.findActiveCartByGuestToken(guestToken)
+                    .orElseGet(() -> createNewCart(null, guestToken));
         } else {
-            return cartRepository.findByUserIsNullAndStatus(CartStatus.ACTIVE)
-                    .orElseGet(() -> createNewCart(null));
+            throw new IllegalArgumentException("Either userId or guestToken must be provided");
         }
     }
 
     // Create new cart
-    private Cart createNewCart(Long userId) {
+    private Cart createNewCart(Long userId, String guestToken) {
         Cart cart = new Cart();
         if (userId != null) {
             User user = userService.findById(userId)
                     .orElseThrow(() -> new ResourceNotFoundException("User", userId));
             cart.setUser(user);
         }
+        cart.setGuestToken(guestToken);
         cart.setStatus(CartStatus.ACTIVE);
         return cartRepository.save(cart);
     }
 
     // Get cart items by user
-    List<CartItem> getCartItems(Long userId) {
-        Cart cart = getOrCreateActiveCart(userId);
+    List<CartItem> getCartItems(Long userId, String guestToken) {
+        Cart cart = getOrCreateActiveCart(userId, guestToken);
         return cartItemRepository.findByCartId(cart.getId());
     }
 
     // Add product to cart (internal)
     @Transactional
-    CartItem addToCart(Long userId, Long productId, Integer quantity) {
-        Cart cart = getOrCreateActiveCart(userId);
+    CartItem addToCart(Long userId, Long productId, Integer quantity, String guestToken) {
+        Cart cart = getOrCreateActiveCart(userId, guestToken);
         Product product = productService.findProductById(productId);
 
         Optional<CartItem> existingItem = cartItemRepository.findByCartIdAndProductId(cart.getId(), productId);

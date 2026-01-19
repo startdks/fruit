@@ -39,6 +39,7 @@ class CartControllerTest {
     private ProductRepository productRepository;
 
     private Product testProduct;
+    private static final String TEST_GUEST_TOKEN = "test-guest-token-12345";
 
     @BeforeEach
     void setUp() {
@@ -65,7 +66,8 @@ class CartControllerTest {
         @Test
         @DisplayName("Returns empty cart for guest user")
         void returnsEmptyCartForGuest() throws Exception {
-            mockMvc.perform(get("/api/cart"))
+            mockMvc.perform(get("/api/cart")
+                    .param("guestToken", TEST_GUEST_TOKEN))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.items", hasSize(0)))
                     .andExpect(jsonPath("$.subtotal", is(0)));
@@ -75,12 +77,13 @@ class CartControllerTest {
         @DisplayName("Returns cart with items")
         void returnsCartWithItems() throws Exception {
             // Add item to cart first
-            CartItemRequest request = new CartItemRequest(testProduct.getId(), 2, null);
+            CartItemRequest request = new CartItemRequest(testProduct.getId(), 2, null, TEST_GUEST_TOKEN);
             mockMvc.perform(post("/api/cart")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request)));
 
-            mockMvc.perform(get("/api/cart"))
+            mockMvc.perform(get("/api/cart")
+                    .param("guestToken", TEST_GUEST_TOKEN))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.items", hasSize(1)))
                     .andExpect(jsonPath("$.items[0].productName", is("Test Apple")))
@@ -97,7 +100,7 @@ class CartControllerTest {
         @Test
         @DisplayName("Adds item to cart successfully")
         void addsItemToCart() throws Exception {
-            CartItemRequest request = new CartItemRequest(testProduct.getId(), 3, null);
+            CartItemRequest request = new CartItemRequest(testProduct.getId(), 3, null, TEST_GUEST_TOKEN);
 
             mockMvc.perform(post("/api/cart")
                     .contentType(MediaType.APPLICATION_JSON)
@@ -111,7 +114,7 @@ class CartControllerTest {
         @Test
         @DisplayName("Returns 400 when product ID is missing")
         void returns400WhenProductIdMissing() throws Exception {
-            CartItemRequest request = new CartItemRequest(null, 3, null);
+            CartItemRequest request = new CartItemRequest(null, 3, null, TEST_GUEST_TOKEN);
 
             mockMvc.perform(post("/api/cart")
                     .contentType(MediaType.APPLICATION_JSON)
@@ -122,7 +125,7 @@ class CartControllerTest {
         @Test
         @DisplayName("Returns 400 when quantity is zero or negative")
         void returns400WhenQuantityInvalid() throws Exception {
-            CartItemRequest request = new CartItemRequest(testProduct.getId(), 0, null);
+            CartItemRequest request = new CartItemRequest(testProduct.getId(), 0, null, TEST_GUEST_TOKEN);
 
             mockMvc.perform(post("/api/cart")
                     .contentType(MediaType.APPLICATION_JSON)
@@ -141,7 +144,7 @@ class CartControllerTest {
         @DisplayName("Updates cart item quantity")
         void updatesCartItemQuantity() throws Exception {
             // Add item first
-            CartItemRequest request = new CartItemRequest(testProduct.getId(), 2, null);
+            CartItemRequest request = new CartItemRequest(testProduct.getId(), 2, null, TEST_GUEST_TOKEN);
             String response = mockMvc.perform(post("/api/cart")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request)))
@@ -159,7 +162,7 @@ class CartControllerTest {
         @DisplayName("Removes item when quantity is zero")
         void removesItemWhenQuantityZero() throws Exception {
             // Add item first
-            CartItemRequest request = new CartItemRequest(testProduct.getId(), 2, null);
+            CartItemRequest request = new CartItemRequest(testProduct.getId(), 2, null, TEST_GUEST_TOKEN);
             String response = mockMvc.perform(post("/api/cart")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request)))
@@ -183,7 +186,7 @@ class CartControllerTest {
         @DisplayName("Removes item from cart")
         void removesItemFromCart() throws Exception {
             // Add item first
-            CartItemRequest request = new CartItemRequest(testProduct.getId(), 2, null);
+            CartItemRequest request = new CartItemRequest(testProduct.getId(), 2, null, TEST_GUEST_TOKEN);
             String response = mockMvc.perform(post("/api/cart")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request)))
@@ -195,7 +198,8 @@ class CartControllerTest {
                     .andExpect(status().isNoContent());
 
             // Verify cart is empty
-            mockMvc.perform(get("/api/cart"))
+            mockMvc.perform(get("/api/cart")
+                    .param("guestToken", TEST_GUEST_TOKEN))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.items", hasSize(0)));
         }
@@ -211,7 +215,7 @@ class CartControllerTest {
         @DisplayName("Clears all items from cart")
         void clearsCart() throws Exception {
             // Add items first
-            CartItemRequest request = new CartItemRequest(testProduct.getId(), 2, null);
+            CartItemRequest request = new CartItemRequest(testProduct.getId(), 2, null, TEST_GUEST_TOKEN);
             mockMvc.perform(post("/api/cart")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request)));

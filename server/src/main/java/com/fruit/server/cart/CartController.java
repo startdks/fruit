@@ -1,5 +1,7 @@
 package com.fruit.server.cart;
 
+import java.util.UUID;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,35 +25,55 @@ public class CartController {
     private final CartService cartService;
 
     @GetMapping
-    public ResponseEntity<CartResponse> getCart(@RequestParam(required = false) Long userId) {
-        CartResponse cartResponse = cartService.getCartResponse(userId);
+    public ResponseEntity<CartResponse> getCart(@RequestParam(required = false) Long userId,
+            @RequestParam(required = false) String guestToken) {
+        CartResponse cartResponse = cartService.getCartResponse(userId, guestToken);
         return ResponseEntity.ok(cartResponse);
+    }
+
+    @GetMapping("/guest-token")
+    public ResponseEntity<String> generateGuesetToken() {
+        String token = UUID.randomUUID().toString();
+        return ResponseEntity.ok(token);
     }
 
     @PostMapping
     public ResponseEntity<CartItemResponse> addToCart(@Valid @RequestBody CartItemRequest request) {
-        CartItemResponse cartItem = cartService.addToCartAndGetResponse(
-                request.userId(),
-                request.productId(),
-                request.quantity());
-        return ResponseEntity.status(HttpStatus.CREATED).body(cartItem);
+        try {
+            CartItemResponse cartItem = cartService.addToCartAndGetResponse(
+                    request.userId(),
+                    request.productId(),
+                    request.quantity(),
+                    request.guestToken());
+            return ResponseEntity.status(HttpStatus.CREATED).body(cartItem);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PutMapping("/{cartItemId}")
     public ResponseEntity<CartItemResponse> updateCartItem(
             @PathVariable Long cartItemId,
             @RequestParam Integer quantity) {
-        CartItemResponse updatedItem = cartService.updateQuantityAndGetResponse(cartItemId, quantity);
-        if (updatedItem == null) {
-            return ResponseEntity.noContent().build();
+        try {
+            CartItemResponse updatedItem = cartService.updateQuantityAndGetResponse(cartItemId, quantity);
+            if (updatedItem == null) {
+                return ResponseEntity.noContent().build();
+            }
+            return ResponseEntity.ok(updatedItem);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(updatedItem);
     }
 
     @DeleteMapping("/{cartItemId}")
     public ResponseEntity<Void> removeFromCart(@PathVariable Long cartItemId) {
-        cartService.removeFromCart(cartItemId);
-        return ResponseEntity.noContent().build();
+        try {
+            cartService.removeFromCart(cartItemId);
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/clear")
@@ -61,8 +83,8 @@ public class CartController {
     }
 
     @PostMapping("/transfer")
-    public ResponseEntity<Void> transferGuestCart(@RequestParam Long userId) {
-        cartService.transferGuestCartToUser(userId);
+    public ResponseEntity<Void> transferGuestCart(@RequestParam Long userId, @RequestParam String guestToken) {
+        cartService.transferGuestCartToUser(userId, guestToken);
         return ResponseEntity.ok().build();
     }
 }

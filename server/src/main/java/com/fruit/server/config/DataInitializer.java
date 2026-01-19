@@ -16,7 +16,6 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        // 이미 상품이 있으면 초기화 스킵
         if (productRepository.count() > 0) {
             System.out.println("✅ Products already exist. Skipping initialization.");
             return;

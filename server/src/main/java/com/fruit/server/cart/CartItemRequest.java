@@ -8,5 +8,7 @@ public record CartItemRequest(
 
         @NotNull(message = "Quantity is required") @Positive(message = "Quantity must be positive") Integer quantity,
 
-        Long userId) {
+        Long userId,
+
+        String guestToken) {
 }

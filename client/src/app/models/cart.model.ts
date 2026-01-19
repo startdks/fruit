@@ -22,4 +22,5 @@ export interface CartItemRequest {
     productId: number;
     quantity: number;
     userId?: number | null;
+    guestToken?: string | null;
 }
